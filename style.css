@@ -4,12 +4,12 @@
   --bg1: #0f0c29;
   --bg2: #302b63;
   --bg3: #24243e;
-  --glass: rgba(255, 255, 255, 0.14);
+  --glass: rgba(255,255,255,0.14);
 }
 
 * {
   box-sizing: border-box;
-  font-family: "Inter", system-ui, sans-serif;
+  font-family: system-ui, sans-serif;
 }
 
 body {
@@ -23,7 +23,7 @@ body {
   color: white;
 }
 
-/* 🌟 Floating lights background */
+/* Floating lights */
 .light {
   position: fixed;
   width: 6px;
@@ -34,7 +34,168 @@ body {
 }
 
 @keyframes float {
-  from {
+  from { transform: translateY(110vh); }
+  to { transform: translateY(-120vh); }
+}
+
+/* Main card */
+.card {
+  width: min(420px, 92vw);
+  padding: 26px 22px 30px;
+  border-radius: 26px;
+  background: var(--glass);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+  text-align: center;
+  position: relative;
+  transition: opacity 0.4s ease;
+}
+
+.card.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Valentine image */
+.valentine-img {
+  width: 100%;
+  max-width: 320px;
+  border-radius: 20px;
+  margin-bottom: 18px;
+  box-shadow:
+    0 20px 60px rgba(255,77,141,0.35),
+    0 0 0 4px rgba(255,255,255,0.12);
+}
+
+h1 {
+  font-size: 22px;
+  min-height: 60px;
+}
+
+.signature {
+  font-size: 13px;
+  opacity: 0.75;
+  margin-bottom: 18px;
+}
+
+/* Buttons */
+.buttons {
+  position: relative;
+  height: 120px;
+}
+
+button {
+  border: none;
+  padding: 14px 26px;
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: pointer;
+  color: white;
+  font-size: 15px;
+}
+
+#yes {
+  background: linear-gradient(135deg, var(--pink), var(--rose));
+}
+
+#no {
+  position: absolute;
+  background: rgba(255,255,255,0.2);
+  left: 60%;
+  top: 20px;
+  transition: 0.25s;
+}
+
+/* Success overlay */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.overlay.show {
+  display: flex;
+  pointer-events: auto;
+}
+
+.success-card {
+  background: white;
+  color: #222;
+  padding: 26px;
+  border-radius: 20px;
+}
+
+/* Balloons */
+#balloons {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.balloon {
+  position: absolute;
+  bottom: -80px;
+  width: 30px;
+  height: 40px;
+  border-radius: 50%;
+  animation: rise 3.5s ease-in forwards;
+}
+
+@keyframes rise {
+  to {
+    transform: translateY(-120vh);
+    opacity: 0;
+  }
+}
+
+/* Final scene */
+.flower {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(120deg, #0f0c29, #302b63, #24243e);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+  z-index: 100;
+}
+
+.flower.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.flower img {
+  width: 260px;
+  border-radius: 22px;
+  margin-bottom: 16px;
+}
+
+#restart {
+  margin-top: 14px;
+  background: linear-gradient(135deg, var(--pink), var(--rose));
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .buttons { height: 160px; }
+  #yes { margin-bottom: 14px; }
+  #no {
+    left: 50% !important;
+    top: 80px !important;
+    transform: translateX(-50%);
+  }
+}  from {
     transform: translateY(110vh);
   }
   to {
@@ -359,6 +520,7 @@ button {
     transform: translateX(-50%);
   }
 }
+
 
 
 
