@@ -1,110 +1,102 @@
-:root {
-  --pink: #ff4d8d;
-  --rose: #ff9ec4;
-  --bg1: #0f0c29;
-  --bg2: #302b63;
-  --bg3: #24243e;
-  --glass: rgba(255,255,255,0.14);
-}
+document.addEventListener("DOMContentLoaded", () => {
 
-* {
-  box-sizing: border-box;
-  font-family: system-ui, sans-serif;
-}
+  // ===== ELEMENTS =====
+  const noBtn = document.getElementById("no");
+  const yesBtn = document.getElementById("yes");
+  const arena = document.getElementById("arena");
+  const question = document.getElementById("question");
+  const success = document.getElementById("success");
+  const flower = document.getElementById("flower");
+  const restart = document.getElementById("restart");
+  const card = document.querySelector(".card");
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  background: linear-gradient(120deg, var(--bg1), var(--bg2), var(--bg3));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  color: white;
-}
+  // ===== FLOATING LIGHTS =====
+  for (let i = 0; i < 40; i++) {
+    const light = document.createElement("div");
+    light.className = "light";
+    light.style.left = Math.random() * 100 + "vw";
+    light.style.animationDuration = 5 + Math.random() * 6 + "s";
+    document.body.appendChild(light);
+  }
 
-/* Floating lights */
-.light {
-  position: fixed;
-  width: 6px;
-  height: 6px;
-  background: radial-gradient(circle, #fff, transparent);
-  opacity: 0.6;
-  animation: float 8s linear infinite;
-}
+  // ===== TEXT FLOW =====
+  const texts = [
+    "Will you be my Valentine?",
+    "Are you sure? 😳",
+    "Your heart already knows 💗",
+    "Almost there…",
+    "Hilina Mesfin says YES 💘"
+  ];
+  let idx = 0;
 
-@keyframes float {
-  from { transform: translateY(110vh); }
-  to { transform: translateY(-120vh); }
-}
+  function clamp(v, min, max) {
+    return Math.min(max, Math.max(min, v));
+  }
 
-/* Card */
-.card {
-  width: min(420px, 92vw);
-  padding: 26px 22px 30px;
-  border-radius: 26px;
-  background: var(--glass);
-  backdrop-filter: blur(18px);
-  box-shadow: 0 30px 80px rgba(0,0,0,0.45);
-  text-align: center;
-  position: relative;
-  transition: opacity 0.4s ease;
-}
+  // ===== NO BUTTON EVADE =====
+  function evade(x, y) {
+    const a = arena.getBoundingClientRect();
+    const b = noBtn.getBoundingClientRect();
 
-.card.hide {
-  opacity: 0;
-  pointer-events: none;
-}
+    let dx = b.left + b.width / 2 - x;
+    let dy = b.top + b.height / 2 - y;
+    const d = Math.hypot(dx, dy) || 1;
 
-/* Hero text */
-.hero-text {
-  height: 180px;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 26px;
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--pink), var(--rose));
-  box-shadow: 0 20px 50px rgba(255,77,141,0.45);
-  margin-bottom: 16px;
-  animation: floatText 3s ease-in-out infinite;
-}
+    dx = (dx / d) * 90;
+    dy = (dy / d) * 90;
 
-@keyframes floatText {
-  50% { transform: translateY(-6px); }
-}
+    let nx = b.left + dx - a.left;
+    let ny = b.top + dy - a.top;
 
-h1 {
-  font-size: 22px;
-  min-height: 60px;
-}
+    noBtn.style.left = clamp(nx, 0, a.width - b.width) + "px";
+    noBtn.style.top = clamp(ny, 0, a.height - b.height) + "px";
 
-.signature {
-  font-size: 13px;
-  opacity: 0.8;
-  margin-bottom: 18px;
-}
+    if (idx < texts.length) {
+      question.textContent = texts[idx++];
+    }
+  }
 
-/* Buttons */
-.buttons {
-  position: relative;
-  height: 120px;
-}
+  arena.addEventListener("mousemove", e => {
+    evade(e.clientX, e.clientY);
+  });
 
-button {
-  border: none;
-  padding: 14px 26px;
-  border-radius: 999px;
-  font-weight: 700;
-  cursor: pointer;
-  color: white;
-  font-size: 15px;
-}
+  arena.addEventListener("touchmove", e => {
+    const t = e.touches[0];
+    evade(t.clientX, t.clientY);
+  }, { passive: true });
 
-#yes {
-  background: linear-gradient(135deg, var(--pink), var(--rose));
-}
+  // ===== YES CLICK =====
+  yesBtn.addEventListener("click", () => {
+    card.classList.add("hide");
+    success.classList.add("show");
+    launchBalloons();
+
+    setTimeout(() => {
+      flower.classList.add("show");
+    }, 1500);
+  });
+
+  // ===== REPLAY =====
+  restart.addEventListener("click", () => {
+    location.reload();
+  });
+
+  // ===== BALLOONS =====
+  function launchBalloons() {
+    const box = document.getElementById("balloons");
+    const colors = ["#ff4d8d", "#ff9ec4", "#ffd1e6", "#ffffff"];
+
+    for (let i = 0; i < 25; i++) {
+      const b = document.createElement("div");
+      b.className = "balloon";
+      b.style.left = Math.random() * 100 + "vw";
+      b.style.background = colors[Math.floor(Math.random() * colors.length)];
+      box.appendChild(b);
+      setTimeout(() => b.remove(), 4000);
+    }
+  }
+
+});}
 
 #no {
   position: absolute;
@@ -202,4 +194,5 @@ button {
     transform: translateX(-50%);
   }
 }
+
 
