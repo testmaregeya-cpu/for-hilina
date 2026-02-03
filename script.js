@@ -1,70 +1,76 @@
-document.addEventListener("DOMContentLoaded", () => {
+const noBtn = document.getElementById("no");
+const yesBtn = document.getElementById("yes");
+const arena = document.getElementById("arena");
+const question = document.getElementById("question");
+const success = document.getElementById("success");
 
-  // ===== ELEMENTS =====
-  const noBtn = document.getElementById("no");
-  const yesBtn = document.getElementById("yes");
-  const arena = document.getElementById("arena");
-  const question = document.getElementById("question");
-  const success = document.getElementById("success");
-  const flower = document.getElementById("flower");
-  const restart = document.getElementById("restart");
-  const card = document.querySelector(".card");
+const texts = [
+  "Will you be my Valentine?",
+  "Are you sure? 😳",
+  "Your heart says yes 💗",
+  "Almost there…",
+  "Hilina Mesfin says YES 💘"
+];
 
-  // ===== FLOATING LIGHTS =====
-  for (let i = 0; i < 40; i++) {
-    const light = document.createElement("div");
-    light.className = "light";
-    light.style.left = Math.random() * 100 + "vw";
-    light.style.animationDuration = 5 + Math.random() * 6 + "s";
-    document.body.appendChild(light);
+let idx = 0;
+
+function clamp(v, min, max) {
+  return Math.min(max, Math.max(min, v));
+}
+
+function evade(x, y) {
+  const a = arena.getBoundingClientRect();
+  const b = noBtn.getBoundingClientRect();
+
+  let dx = b.left + b.width / 2 - x;
+  let dy = b.top + b.height / 2 - y;
+  const d = Math.hypot(dx, dy) || 1;
+
+  dx = (dx / d) * 90;
+  dy = (dy / d) * 90;
+
+  let nx = b.left + dx - a.left;
+  let ny = b.top + dy - a.top;
+
+  noBtn.style.left = clamp(nx, 0, a.width - b.width) + "px";
+  noBtn.style.top = clamp(ny, 0, a.height - b.height) + "px";
+
+  if (idx < texts.length) {
+    question.textContent = texts[idx++];
   }
+}
 
-  // ===== TEXT FLOW =====
-  const texts = [
-    "Will you be my Valentine?",
-    "Are you sure? 😳",
-    "Your heart already knows 💗",
-    "Almost there…",
-    "Hilina Mesfin says YES 💘"
-  ];
-  let idx = 0;
+arena.addEventListener("mousemove", e => evade(e.clientX, e.clientY));
+arena.addEventListener("touchmove", e => {
+  const t = e.touches[0];
+  evade(t.clientX, t.clientY);
+}, { passive: true });
 
-  function clamp(v, min, max) {
-    return Math.min(max, Math.max(min, v));
+yesBtn.addEventListener("click", () => {
+  document.querySelector(".card").classList.add("hide");
+  success.classList.add("show");
+  launchBalloons();
+
+  setTimeout(() => {
+    document.getElementById("flower").classList.add("show");
+  }, 1800);
+});
+
+function launchBalloons() {
+  const c = document.getElementById("balloons");
+  const colors = ["#ff4d8d", "#ff9ec4", "#ffd1e6", "#fff"];
+
+  for (let i = 0; i < 25; i++) {
+    const b = document.createElement("div");
+    b.className = "balloon";
+    b.style.left = Math.random() * 100 + "vw";
+    b.style.background = colors[Math.floor(Math.random() * colors.length)];
+    c.appendChild(b);
+    setTimeout(() => b.remove(), 4000);
   }
+}
 
-  // ===== NO BUTTON EVADE =====
-  function evade(x, y) {
-    const a = arena.getBoundingClientRect();
-    const b = noBtn.getBoundingClientRect();
-
-    let dx = b.left + b.width / 2 - x;
-    let dy = b.top + b.height / 2 - y;
-    const d = Math.hypot(dx, dy) || 1;
-
-    dx = (dx / d) * 90;
-    dy = (dy / d) * 90;
-
-    let nx = b.left + dx - a.left;
-    let ny = b.top + dy - a.top;
-
-    noBtn.style.left = clamp(nx, 0, a.width - b.width) + "px";
-    noBtn.style.top = clamp(ny, 0, a.height - b.height) + "px";
-
-    if (idx < texts.length) {
-      question.textContent = texts[idx++];
-    }
-  }
-
-  arena.addEventListener("mousemove", e => {
-    evade(e.clientX, e.clientY);
-  });
-
-  arena.addEventListener("touchmove", e => {
-    const t = e.touches[0];
-    evade(t.clientX, t.clientY);
-  }, { passive: true });
-
+document.getElementById("restart").onclick = () => location.reload();
   // ===== YES CLICK =====
   yesBtn.addEventListener("click", () => {
     card.classList.add("hide");
@@ -194,5 +200,6 @@ document.addEventListener("DOMContentLoaded", () => {
     transform: translateX(-50%);
   }
 }
+
 
 
