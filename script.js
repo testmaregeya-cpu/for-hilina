@@ -1,130 +1,205 @@
-const noBtn = document.getElementById("no");
-const yesBtn = document.getElementById("yes");
-const arena = document.getElementById("arena");
-const question = document.getElementById("question");
-const success = document.getElementById("success");
-const restartBtn = document.getElementById("restart");
-
-// Text flow
-const magicTexts = [
-  "Will you be my Valentine?",
-  "Are you really sure?",
-  "Hmm… that didn’t feel like a No 😳",
-  "Your heart already knows 💗",
-  "This is slowly becoming a Yes…",
-  "Hilina Mesfin, you’re smiling right now 😌",
-  "Okay… just tap Yes 💖",
-  "Hilina Mesfin says YES 💘"
-];
-
-let textIndex = 0;
-let lastTextChange = 0;
-
-// Floating lights
-for (let i = 0; i < 40; i++) {
-  const light = document.createElement("div");
-  light.className = "light";
-  light.style.left = Math.random() * 100 + "vw";
-  light.style.animationDuration = 5 + Math.random() * 6 + "s";
-  document.body.appendChild(light);
+:root {
+  --pink: #ff4d8d;
+  --rose: #ff9ec4;
+  --bg1: #0f0c29;
+  --bg2: #302b63;
+  --bg3: #24243e;
+  --glass: rgba(255,255,255,0.14);
 }
 
-function clamp(v, min, max) {
-  return Math.min(max, Math.max(min, v));
+* {
+  box-sizing: border-box;
+  font-family: system-ui, sans-serif;
 }
 
-// No button evade
-function evade(x, y) {
-  const a = arena.getBoundingClientRect();
-  const b = noBtn.getBoundingClientRect();
-
-  let dx = (b.left + b.width / 2) - x;
-  let dy = (b.top + b.height / 2) - y;
-  const d = Math.hypot(dx, dy) || 1;
-
-  dx = (dx / d) * 90;
-  dy = (dy / d) * 90;
-
-  let nx = b.left + dx - a.left;
-  let ny = b.top + dy - a.top;
-
-  nx = clamp(nx, 0, a.width - b.width);
-  ny = clamp(ny, 0, a.height - b.height);
-
-  noBtn.style.left = nx + "px";
-  noBtn.style.top = ny + "px";
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(120deg, var(--bg1), var(--bg2), var(--bg3));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: white;
 }
 
-// Change text
-function changeText() {
-  const now = Date.now();
-  if (now - lastTextChange < 800) return;
+/* Floating lights */
+.light {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  background: radial-gradient(circle, #fff, transparent);
+  opacity: 0.6;
+  animation: float 8s linear infinite;
+}
 
-  if (textIndex < magicTexts.length) {
-    question.style.opacity = 0;
-    setTimeout(() => {
-      question.textContent = magicTexts[textIndex++];
-      question.style.opacity = 1;
-    }, 180);
-    lastTextChange = now;
+@keyframes float {
+  from { transform: translateY(110vh); }
+  to { transform: translateY(-120vh); }
+}
+
+/* Card */
+.card {
+  width: min(420px, 92vw);
+  padding: 26px 22px 30px;
+  border-radius: 26px;
+  background: var(--glass);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+  text-align: center;
+  position: relative;
+  transition: opacity 0.4s ease;
+}
+
+.card.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Hero text */
+.hero-text {
+  height: 180px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--pink), var(--rose));
+  box-shadow: 0 20px 50px rgba(255,77,141,0.45);
+  margin-bottom: 16px;
+  animation: floatText 3s ease-in-out infinite;
+}
+
+@keyframes floatText {
+  50% { transform: translateY(-6px); }
+}
+
+h1 {
+  font-size: 22px;
+  min-height: 60px;
+}
+
+.signature {
+  font-size: 13px;
+  opacity: 0.8;
+  margin-bottom: 18px;
+}
+
+/* Buttons */
+.buttons {
+  position: relative;
+  height: 120px;
+}
+
+button {
+  border: none;
+  padding: 14px 26px;
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: pointer;
+  color: white;
+  font-size: 15px;
+}
+
+#yes {
+  background: linear-gradient(135deg, var(--pink), var(--rose));
+}
+
+#no {
+  position: absolute;
+  background: rgba(255,255,255,0.2);
+  left: 60%;
+  top: 20px;
+  transition: 0.25s;
+}
+
+/* Overlay */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.overlay.show {
+  display: flex;
+}
+
+.success-card {
+  background: white;
+  color: #222;
+  padding: 26px;
+  border-radius: 20px;
+}
+
+/* Balloons */
+#balloons {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.balloon {
+  position: absolute;
+  bottom: -80px;
+  width: 30px;
+  height: 40px;
+  border-radius: 50%;
+  animation: rise 3.5s ease-in forwards;
+}
+
+@keyframes rise {
+  to {
+    transform: translateY(-120vh);
+    opacity: 0;
   }
 }
 
-// Events
-arena.addEventListener("mousemove", e => {
-  evade(e.clientX, e.clientY);
-  changeText();
-});
+/* Final scene */
+.flower {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(120deg, #0f0c29, #302b63, #24243e);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+  z-index: 100;
+}
 
-arena.addEventListener("touchmove", e => {
-  const t = e.touches[0];
-  evade(t.clientX, t.clientY);
-  changeText();
-}, { passive: true });
+.flower.show {
+  opacity: 1;
+  pointer-events: auto;
+}
 
-// Yes click
-yesBtn.addEventListener("click", () => {
-  success.classList.add("show");
-  launchBalloons();
+.flower img {
+  width: 260px;
+  border-radius: 22px;
+  margin-bottom: 16px;
+}
 
-  setTimeout(() => {
-    const flower = document.getElementById("flower");
-    flower.classList.add("show");
+#restart {
+  margin-top: 14px;
+  background: linear-gradient(135deg, var(--pink), var(--rose));
+}
 
-    setTimeout(() => {
-      restartBtn.classList.remove("hidden");
-      restartBtn.classList.add("show");
-    }, 2000);
-
-  }, 1800);
-});
-
-// Replay
-restartBtn.addEventListener("click", () => {
-  document.getElementById("flower").classList.remove("show");
-  restartBtn.classList.remove("show");
-  restartBtn.classList.add("hidden");
-  success.classList.remove("show");
-
-  question.textContent = "Hilina Mesfin, will you be my Valentine?";
-  textIndex = 0;
-
-  noBtn.style.left = "60%";
-  noBtn.style.top = "20px";
-});
-
-// Balloons
-function launchBalloons() {
-  const box = document.getElementById("balloons");
-  const colors = ["#ff4d8d", "#ff9ec4", "#fff"];
-
-  for (let i = 0; i < 25; i++) {
-    const b = document.createElement("div");
-    b.className = "balloon";
-    b.style.left = Math.random() * 100 + "vw";
-    b.style.background = colors[Math.floor(Math.random() * colors.length)];
-    box.appendChild(b);
-    setTimeout(() => b.remove(), 4000);
+/* Mobile */
+@media (max-width: 480px) {
+  .buttons { height: 160px; }
+  #yes { margin-bottom: 14px; }
+  #no {
+    left: 50% !important;
+    top: 80px !important;
+    transform: translateX(-50%);
   }
 }
 
