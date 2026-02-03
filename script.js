@@ -1,40 +1,117 @@
-const noBtn = document.getElementById("no");
-const yesBtn = document.getElementById("yes");
-const arena = document.getElementById("arena");
-const question = document.getElementById("question");
-const success = document.getElementById("success");
+document.addEventListener("DOMContentLoaded", () => {
 
-const texts = [
-  "Will you be my Valentine?",
-  "Are you sure? 😳",
-  "Your heart says yes 💗",
-  "Almost there…",
-  "Hilina Mesfin says YES 💘"
-];
+  // ===== ELEMENTS =====
+  const noBtn = document.getElementById("no");
+  const yesBtn = document.getElementById("yes");
+  const arena = document.getElementById("arena");
+  const question = document.getElementById("question");
+  const success = document.getElementById("success");
+  const flower = document.getElementById("flower");
+  const restartBtn = document.getElementById("restart");
+  const card = document.querySelector(".card");
 
-let idx = 0;
+  // ===== FLOATING LIGHTS =====
+  for (let i = 0; i < 40; i++) {
+    const light = document.createElement("div");
+    light.className = "light";
+    light.style.left = Math.random() * 100 + "vw";
+    light.style.animationDuration = 5 + Math.random() * 6 + "s";
+    document.body.appendChild(light);
+  }
 
-function clamp(v, min, max) {
-  return Math.min(max, Math.max(min, v));
-}
+  // ===== TEXT FLOW =====
+  const texts = [
+    "Will you be my Valentine?",
+    "Are you sure? 😳",
+    "Hmm… that didn’t feel like a No 💗",
+    "Your heart already knows 💕",
+    "Almost there…",
+    "Hilina Mesfin says YES 💘"
+  ];
+  let textIndex = 0;
 
-function evade(x, y) {
-  const a = arena.getBoundingClientRect();
-  const b = noBtn.getBoundingClientRect();
+  // ===== UTIL =====
+  function clamp(v, min, max) {
+    return Math.min(max, Math.max(min, v));
+  }
 
-  let dx = b.left + b.width / 2 - x;
-  let dy = b.top + b.height / 2 - y;
-  const d = Math.hypot(dx, dy) || 1;
+  // ===== NO BUTTON EVADE =====
+  function evade(pointerX, pointerY) {
+    const arenaRect = arena.getBoundingClientRect();
+    const btnRect = noBtn.getBoundingClientRect();
 
-  dx = (dx / d) * 90;
-  dy = (dy / d) * 90;
+    let dx = btnRect.left + btnRect.width / 2 - pointerX;
+    let dy = btnRect.top + btnRect.height / 2 - pointerY;
 
-  let nx = b.left + dx - a.left;
-  let ny = b.top + dy - a.top;
+    const dist = Math.hypot(dx, dy) || 1;
+    const force = 90;
 
-  noBtn.style.left = clamp(nx, 0, a.width - b.width) + "px";
-  noBtn.style.top = clamp(ny, 0, a.height - b.height) + "px";
+    dx = (dx / dist) * force;
+    dy = (dy / dist) * force;
 
+    let newX = btnRect.left + dx - arenaRect.left;
+    let newY = btnRect.top + dy - arenaRect.top;
+
+    newX = clamp(newX, 0, arenaRect.width - btnRect.width);
+    newY = clamp(newY, 0, arenaRect.height - btnRect.height);
+
+    noBtn.style.left = newX + "px";
+    noBtn.style.top = newY + "px";
+
+    if (textIndex < texts.length) {
+      question.textContent = texts[textIndex++];
+    }
+  }
+
+  // ===== DESKTOP =====
+  arena.addEventListener("mousemove", (e) => {
+    evade(e.clientX, e.clientY);
+  });
+
+  // ===== MOBILE =====
+  arena.addEventListener(
+    "touchmove",
+    (e) => {
+      const t = e.touches[0];
+      evade(t.clientX, t.clientY);
+    },
+    { passive: true }
+  );
+
+  // ===== YES CLICK =====
+  yesBtn.addEventListener("click", () => {
+    card.classList.add("hide");
+    success.classList.add("show");
+    launchBalloons();
+
+    setTimeout(() => {
+      flower.classList.add("show");
+    }, 1500);
+  });
+
+  // ===== REPLAY =====
+  restartBtn.addEventListener("click", () => {
+    location.reload();
+  });
+
+  // ===== BALLOONS =====
+  function launchBalloons() {
+    const container = document.getElementById("balloons");
+    const colors = ["#ff4d8d", "#ff9ec4", "#ffd1e6", "#ffffff"];
+
+    for (let i = 0; i < 25; i++) {
+      const balloon = document.createElement("div");
+      balloon.className = "balloon";
+      balloon.style.left = Math.random() * 100 + "vw";
+      balloon.style.background =
+        colors[Math.floor(Math.random() * colors.length)];
+      container.appendChild(balloon);
+
+      setTimeout(() => balloon.remove(), 4000);
+    }
+  }
+
+});
   if (idx < texts.length) {
     question.textContent = texts[idx++];
   }
@@ -200,6 +277,7 @@ document.getElementById("restart").onclick = () => location.reload();
     transform: translateX(-50%);
   }
 }
+
 
 
 
