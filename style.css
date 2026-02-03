@@ -1,0 +1,213 @@
+:root {
+  --pink: #ff4d8d;
+  --rose: #ff9ec4;
+  --bg1: #0f0c29;
+  --bg2: #302b63;
+  --bg3: #24243e;
+  --glass: rgba(255,255,255,0.14);
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(120deg, var(--bg1), var(--bg2), var(--bg3));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: white;
+}
+
+/* Floating lights */
+.light {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  background: radial-gradient(circle, #fff, transparent);
+  opacity: 0.6;
+  animation: float 8s linear infinite;
+}
+
+@keyframes float {
+  from { transform: translateY(110vh); }
+  to { transform: translateY(-120vh); }
+}
+
+/* Glass card */
+.card {
+  width: min(420px, 92vw);
+  padding: 26px 22px 30px;
+  border-radius: 26px;
+  background: var(--glass);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+  text-align: center;
+  position: relative;
+}
+
+.card img {
+  width: 100%;
+  border-radius: 20px;
+  margin-bottom: 18px;
+}
+
+h1 {
+  font-size: 22px;
+  font-weight: 700;
+  min-height: 60px;
+  transition: opacity 0.3s ease;
+}
+
+.signature {
+  font-size: 13px;
+  opacity: 0.75;
+  margin-bottom: 18px;
+}
+
+/* Buttons */
+.buttons {
+  position: relative;
+  height: 90px;
+}
+
+button {
+  border: none;
+  padding: 14px 26px;
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: pointer;
+  color: white;
+  font-size: 15px;
+}
+
+#yes {
+  background: linear-gradient(135deg, var(--pink), var(--rose));
+  box-shadow: 0 14px 34px rgba(255,77,141,0.45);
+}
+
+#no {
+  position: absolute;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.3);
+  left: 60%;
+  top: 20px;
+  transition: left 0.25s ease, top 0.25s ease;
+  transform: scale(1) !important;
+}
+
+/* Success overlay */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(6px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.overlay.show {
+  display: flex;
+}
+
+.success-card {
+  background: white;
+  color: #222;
+  padding: 26px;
+  border-radius: 20px;
+  text-align: center;
+}
+
+/* Balloons */
+#balloons {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 15;
+}
+
+.balloon {
+  position: absolute;
+  bottom: -80px;
+  width: 30px;
+  height: 40px;
+  border-radius: 50%;
+  animation: rise 3.5s ease-in forwards;
+}
+
+.balloon::after {
+  content: "";
+  position: absolute;
+  bottom: -14px;
+  left: 50%;
+  width: 2px;
+  height: 14px;
+  background: rgba(255,255,255,0.6);
+}
+
+@keyframes rise {
+  to {
+    transform: translateY(-120vh);
+    opacity: 0;
+  }
+}
+
+/* Flower reveal */
+.flower {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(6px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+  z-index: 30;
+}
+
+.flower.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.flower img {
+  width: 240px;
+  border-radius: 22px;
+  box-shadow:
+    0 30px 80px rgba(255,77,141,0.55),
+    0 0 0 8px rgba(255,255,255,0.12);
+  animation: bloom 1.2s ease forwards;
+}
+
+.flower h2 {
+  margin-top: 18px;
+  font-size: 24px;
+}
+
+.flower p {
+  margin-top: 6px;
+  font-size: 14px;
+  opacity: 0.85;
+}
+
+@keyframes bloom {
+  from {
+    transform: scale(0.7) translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
