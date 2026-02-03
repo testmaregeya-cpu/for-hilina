@@ -4,12 +4,12 @@
   --bg1: #0f0c29;
   --bg2: #302b63;
   --bg3: #24243e;
-  --glass: rgba(255,255,255,0.14);
+  --glass: rgba(255, 255, 255, 0.14);
 }
 
 * {
   box-sizing: border-box;
-  font-family: system-ui, sans-serif;
+  font-family: "Inter", system-ui, sans-serif;
 }
 
 body {
@@ -22,17 +22,8 @@ body {
   overflow: hidden;
   color: white;
 }
-.valentine-img {
-  width: 100%;
-  max-width: 320px;
-  border-radius: 20px;
-  margin-bottom: 18px;
-  box-shadow:
-    0 20px 60px rgba(255,77,141,0.35),
-    0 0 0 4px rgba(255,255,255,0.12);
-}
 
-/* Floating lights */
+/* 🌟 Floating lights background */
 .light {
   position: fixed;
   width: 6px;
@@ -43,70 +34,221 @@ body {
 }
 
 @keyframes float {
-  from { transform: translateY(110vh); }
-  to { transform: translateY(-120vh); }
+  from {
+    transform: translateY(110vh);
+  }
+  to {
+    transform: translateY(-120vh);
+  }
 }
 
-/* Card */
+/* 💎 Main glass card */
 .card {
   width: min(420px, 92vw);
   padding: 26px 22px 30px;
   border-radius: 26px;
   background: var(--glass);
   backdrop-filter: blur(18px);
-  box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
   text-align: center;
   position: relative;
-  transition: opacity 0.4s ease;
 }
 
-.card.hide {
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* Hero text */
-.hero-text {
-  height: 180px;
+/* 🖼️ Valentine image */
+.valentine-img {
+  width: 100%;
+  max-width: 320px;
   border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 26px;
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--pink), var(--rose));
-  box-shadow: 0 20px 50px rgba(255,77,141,0.45);
-  margin-bottom: 16px;
-  animation: floatText 3s ease-in-out infinite;
+  margin-bottom: 18px;
+  box-shadow:
+    0 20px 60px rgba(255, 77, 141, 0.35),
+    0 0 0 4px rgba(255, 255, 255, 0.12);
 }
 
-@keyframes floatText {
-  50% { transform: translateY(-6px); }
-}
-
+/* ❤️ Question text */
 h1 {
   font-size: 22px;
+  font-weight: 700;
   min-height: 60px;
+  transition: opacity 0.3s ease;
 }
 
+/* ✍️ Signature */
 .signature {
   font-size: 13px;
-  opacity: 0.8;
+  opacity: 0.75;
   margin-bottom: 18px;
 }
 
-/* Buttons */
+/* 🔘 Buttons container */
 .buttons {
   position: relative;
   height: 120px;
 }
 
+/* 🔘 Common button styles */
 button {
   border: none;
   padding: 14px 26px;
   border-radius: 999px;
   font-weight: 700;
   cursor: pointer;
+  color: white;
+  font-size: 15px;
+}
+
+/* 💖 YES button */
+#yes {
+  background: linear-gradient(135deg, var(--pink), var(--rose));
+  box-shadow: 0 14px 34px rgba(255, 77, 141, 0.45);
+}
+
+/* 🙈 NO button (dodging) */
+#no {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  left: 60%;
+  top: 20px;
+  transition: left 0.25s ease, top 0.25s ease;
+  transform: scale(1) !important;
+}
+
+/* 🎉 Success overlay */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(6px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.overlay.show {
+  display: flex;
+}
+
+.success-card {
+  background: white;
+  color: #222;
+  padding: 26px;
+  border-radius: 20px;
+  text-align: center;
+}
+
+/* 🎈 Balloons */
+#balloons {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 15;
+}
+
+.balloon {
+  position: absolute;
+  bottom: -80px;
+  width: 30px;
+  height: 40px;
+  border-radius: 50%;
+  animation: rise 3.5s ease-in forwards;
+}
+
+.balloon::after {
+  content: "";
+  position: absolute;
+  bottom: -14px;
+  left: 50%;
+  width: 2px;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+@keyframes rise {
+  to {
+    transform: translateY(-120vh);
+    opacity: 0;
+  }
+}
+
+/* 🌹 Final flower / character scene */
+.flower {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+  z-index: 30;
+}
+
+.flower.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.flower img {
+  width: 260px;
+  border-radius: 22px;
+  box-shadow:
+    0 30px 80px rgba(255, 77, 141, 0.55),
+    0 0 0 8px rgba(255, 255, 255, 0.12);
+  animation: bloom 1.2s ease forwards;
+}
+
+.flower h2 {
+  margin-top: 18px;
+  font-size: 24px;
+}
+
+.flower p {
+  margin-top: 6px;
+  font-size: 14px;
+  opacity: 0.85;
+}
+
+/* 🌸 Bloom animation */
+@keyframes bloom {
+  from {
+    transform: scale(0.7) translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+/* 📱 MOBILE FIX — prevents Yes/No overlap */
+@media (max-width: 480px) {
+  .buttons {
+    height: 160px;
+  }
+
+  #yes {
+    position: relative;
+    margin-bottom: 14px;
+  }
+
+  #no {
+    left: 50% !important;
+    top: 80px !important;
+    transform: translateX(-50%);
+  }
+
+  button {
+    padding: 16px 30px;
+    font-size: 16px;
+  }
+}  cursor: pointer;
   color: white;
   font-size: 15px;
 }
@@ -217,6 +359,7 @@ button {
     transform: translateX(-50%);
   }
 }
+
 
 
 
