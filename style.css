@@ -9,7 +9,7 @@
 
 * {
   box-sizing: border-box;
-  font-family: "Inter", system-ui, sans-serif;
+  font-family: system-ui, sans-serif;
 }
 
 body {
@@ -21,6 +21,14 @@ body {
   justify-content: center;
   overflow: hidden;
   color: white;
+}
+.flower img {
+  animation: floatIn 0.9s ease forwards;
+}
+
+@keyframes floatIn {
+  from { transform: translateY(40px) scale(0.85); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
 }
 
 /* Floating lights */
@@ -38,16 +46,15 @@ body {
   to { transform: translateY(-120vh); }
 }
 
-/* Glass card */
+/* Card */
 .card {
   width: min(420px, 92vw);
-  padding: 26px 22px 30px;
+  padding: 26px;
   border-radius: 26px;
   background: var(--glass);
   backdrop-filter: blur(18px);
   box-shadow: 0 30px 80px rgba(0,0,0,0.45);
   text-align: center;
-  position: relative;
 }
 
 .card img {
@@ -58,7 +65,6 @@ body {
 
 h1 {
   font-size: 22px;
-  font-weight: 700;
   min-height: 60px;
   transition: opacity 0.3s ease;
 }
@@ -82,35 +88,28 @@ button {
   font-weight: 700;
   cursor: pointer;
   color: white;
-  font-size: 15px;
 }
 
 #yes {
   background: linear-gradient(135deg, var(--pink), var(--rose));
-  box-shadow: 0 14px 34px rgba(255,77,141,0.45);
 }
 
 #no {
   position: absolute;
   background: rgba(255,255,255,0.2);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.3);
   left: 60%;
   top: 20px;
   transition: left 0.25s ease, top 0.25s ease;
-  transform: scale(1) !important;
 }
 
-/* Success overlay */
+/* Overlay */
 .overlay {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(6px);
   display: none;
   align-items: center;
   justify-content: center;
-  z-index: 10;
 }
 
 .overlay.show {
@@ -122,7 +121,6 @@ button {
   color: #222;
   padding: 26px;
   border-radius: 20px;
-  text-align: center;
 }
 
 /* Balloons */
@@ -130,7 +128,6 @@ button {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 15;
 }
 
 .balloon {
@@ -142,29 +139,15 @@ button {
   animation: rise 3.5s ease-in forwards;
 }
 
-.balloon::after {
-  content: "";
-  position: absolute;
-  bottom: -14px;
-  left: 50%;
-  width: 2px;
-  height: 14px;
-  background: rgba(255,255,255,0.6);
-}
-
 @keyframes rise {
-  to {
-    transform: translateY(-120vh);
-    opacity: 0;
-  }
+  to { transform: translateY(-120vh); opacity: 0; }
 }
 
-/* Flower reveal */
+/* Flower */
 .flower {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.55);
-  backdrop-filter: blur(6px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -173,7 +156,6 @@ button {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.8s ease;
-  z-index: 30;
 }
 
 .flower.show {
@@ -184,30 +166,32 @@ button {
 .flower img {
   width: 240px;
   border-radius: 22px;
-  box-shadow:
-    0 30px 80px rgba(255,77,141,0.55),
-    0 0 0 8px rgba(255,255,255,0.12);
-  animation: bloom 1.2s ease forwards;
+  box-shadow: 0 30px 80px rgba(255,77,141,0.55);
 }
 
-.flower h2 {
-  margin-top: 18px;
-  font-size: 24px;
+/* Replay button */
+.hidden {
+  display: none;
 }
 
-.flower p {
-  margin-top: 6px;
+#restart {
+  margin-top: 22px;
+  padding: 12px 26px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
   font-size: 14px;
-  opacity: 0.85;
+  color: white;
+  background: linear-gradient(135deg, #ff4d8d, #ff9ec4);
+  box-shadow: 0 14px 34px rgba(255,77,141,0.45);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
-@keyframes bloom {
-  from {
-    transform: scale(0.7) translateY(30px);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1) translateY(0);
-    opacity: 1;
-  }
+#restart.show {
+  display: inline-block;
+  opacity: 1;
+  transform: translateY(0);
 }
